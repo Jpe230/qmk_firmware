@@ -108,3 +108,16 @@ void keyboard_post_init_user(void) {
 layer_state_t layer_state_set_user(layer_state_t layer) {
     return layer;
 }
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case RGB_TOG:
+      if (record->event.pressed) {
+        if(rgb_matrix_is_enabled()) annepro2LedDisable();
+        else annepro2LedEnable();
+      }
+      return true;
+    default:
+      return true;
+  }
+}
