@@ -108,3 +108,13 @@ void keyboard_post_init_user(void) {
 layer_state_t layer_state_set_user(layer_state_t layer) {
     return layer;
 }
+
+
+/**
+ * Called after RBG effect render.
+ */
+void rgb_matrix_indicators_user() {
+    if (host_keyboard_led_state().caps_lock) {
+        rgb_matrix_set_color_all(_INDICATOR_COLOR); 
+    }
+}

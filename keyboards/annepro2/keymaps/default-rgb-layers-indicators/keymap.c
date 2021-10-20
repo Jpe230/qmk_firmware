@@ -108,3 +108,25 @@ void keyboard_post_init_user(void) {
 layer_state_t layer_state_set_user(layer_state_t layer) {
     return layer;
 }
+
+
+/**
+ * Called after RBG effect render.
+ */
+void rgb_matrix_indicators_user() {
+   
+    switch(get_highest_layer(layer_state|default_layer_state)) {
+        case _FN1_LAYER:
+            rgb_matrix_set_color_all(_LAYER_1_COLOR); 
+            break;
+        case _FN2_LAYER:
+            rgb_matrix_set_color_all(_LAYER_2_COLOR); 
+            break;
+        default:
+            break;
+    }
+
+    if (host_keyboard_led_state().caps_lock) {
+        rgb_matrix_set_color(LED_TAB, _INDICATOR_COLOR); 
+    }
+}

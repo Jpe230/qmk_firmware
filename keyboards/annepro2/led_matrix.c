@@ -21,26 +21,12 @@ void init(void) {
 static void flush(void) {}
 
 void set_color(int index, uint8_t r, uint8_t g, uint8_t b) {
-    
-    int corrected_index =  led_pos[index];
-
-    const annepro2Led_t color = {
+    ledMask[led_pos[index]] = (annepro2Led_t){
         .p.blue  = b,
         .p.red   = r,
         .p.green = g,
         .p.alpha = 0xff,
-    };
-
-    ledMask[corrected_index] = color;
-
-    int row = index / 14;
-    int col = index % 14;
-
-    if(col == 0){
-        // Update shine on first col
-        annepro2LedMaskSetRow(row);
-    }
-
+    };;
 }
 
 static void set_color_all(uint8_t r, uint8_t g, uint8_t b) {

@@ -24,6 +24,10 @@ static const SerialConfig bleUartConfig = {
 
 static uint8_t ledMcuWakeup[11] = {0x7b, 0x10, 0x43, 0x10, 0x03, 0x00, 0x00, 0x7d, 0x02, 0x01, 0x02};
 
+#ifdef RGB_MATRIX_ENABLE
+uint8_t current_rgb_row = 0;
+#endif
+
 ble_capslock_t BLECapsLock = {._dummy = {0}, .caps_lock = false};
 
 void OVERRIDE bootloader_jump(void) {
@@ -105,7 +109,11 @@ void matrix_scan_kb() {
         uint8_t byte = sdGet(&SD0);
         protoConsume(&proto, byte);
     }
-
+#ifdef RGB_MATRIX_ENABLE
+    annepro2LedMaskSetRow(current_rgb_row);
+    current_rgb_row = (current_rgb_row + 1) % LED_MATRIX_ROWS;
+#endif
+    
     matrix_scan_user();
 }
 
@@ -187,6 +195,13 @@ bool OVERRIDE process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 annepro2LedNextAnimationSpeed();
                 annepro2LedResetForegroundColor();
                 return false;
+
+#ifdef RGB_MATRIX_ENABLE
+            case RGB_TOG:
+                if(rgb_matrix_is_enabled()) annepro2LedDisable();
+                else annepro2LedEnable();
+                return true;
+#endif
 
             default:
                 break;
