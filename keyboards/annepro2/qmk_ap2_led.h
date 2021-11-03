@@ -24,7 +24,7 @@ typedef union {
 
 /* Local copy of ledMask, used to override colors on the board */
 extern annepro2Led_t ledMask[KEY_COUNT];
-extern uint8_t row_changed[NUM_ROW];
+extern uint8_t rowChanged[NUM_ROW];
 
 /* Handle incoming messages */
 extern void ledCommandCallback(const message_t *msg);

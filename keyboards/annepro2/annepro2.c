@@ -109,15 +109,16 @@ void matrix_scan_kb() {
         uint8_t byte = sdGet(&SD0);
         protoConsume(&proto, byte);
     }
+
 #ifdef RGB_MATRIX_ENABLE
     if(row_changed[current_rgb_row])
     {
         annepro2LedMaskSetRow(current_rgb_row);
         current_rgb_row = (current_rgb_row + 1) % LED_MATRIX_ROWS;
-        row_changed[current_rgb_row] = 0;
+        rowChanged[current_rgb_row] = 0;
     }
 #endif
-    
+
     matrix_scan_user();
 }
 

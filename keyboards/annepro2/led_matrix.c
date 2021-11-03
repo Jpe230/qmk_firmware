@@ -27,9 +27,9 @@ void set_color(int index, uint8_t r, uint8_t g, uint8_t b) {
         .p.green = g,
         .p.alpha = 0xff,
     };
-    
+
     int row = index / LED_MATRIX_COLS;
-    row_changed[row] = 1;
+    rowChanged[row] = 1;
 }
 
 static void set_color_all(uint8_t r, uint8_t g, uint8_t b) {
