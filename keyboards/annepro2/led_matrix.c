@@ -4,7 +4,7 @@
 #include "qmk_ap2_led.h"
 #include "color.h"
 
-uint8_t led_pos[DRIVER_LED_TOTAL + 2];
+uint8_t led_pos[DRIVER_LED_TOTAL];
 
 void init(void) {
     unsigned int i = 0;
@@ -26,7 +26,10 @@ void set_color(int index, uint8_t r, uint8_t g, uint8_t b) {
         .p.red   = r,
         .p.green = g,
         .p.alpha = 0xff,
-    };;
+    };
+
+    int row = index / LED_MATRIX_COLS;
+    rowChanged[row] = 1;
 }
 
 static void set_color_all(uint8_t r, uint8_t g, uint8_t b) {
