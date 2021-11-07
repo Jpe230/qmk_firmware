@@ -111,7 +111,7 @@ void matrix_scan_kb() {
     }
 
 #ifdef RGB_MATRIX_ENABLE
-    if(row_changed[current_rgb_row])
+    if(rowChanged[current_rgb_row])
     {
         annepro2LedMaskSetRow(current_rgb_row);
         current_rgb_row = (current_rgb_row + 1) % LED_MATRIX_ROWS;
