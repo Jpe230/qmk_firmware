@@ -21,15 +21,19 @@ void init(void) {
 static void flush(void) {}
 
 void set_color(int index, uint8_t r, uint8_t g, uint8_t b) {
-    ledMask[led_pos[index]] = (annepro2Led_t){
-        .p.blue  = b,
-        .p.red   = r,
-        .p.green = g,
-        .p.alpha = 0xff,
-    };
-
-    int row = index / LED_MATRIX_COLS;
-    rowChanged[row] = 1;
+    if (r != ledMask[led_pos[index]].p.red   ||
+        g != ledMask[led_pos[index]].p.green ||
+        b != ledMask[led_pos[index]].p.blue)
+        {
+            ledMask[led_pos[index]] = (annepro2Led_t){
+                .p.blue  = b,
+                .p.red   = r,
+                .p.green = g,
+                .p.alpha = 0xff,
+            };
+            int row = led_pos[index] / LED_MATRIX_COLS;
+            rowChanged[row] = 1;
+        }
 }
 
 static void set_color_all(uint8_t r, uint8_t g, uint8_t b) {
