@@ -18,3 +18,15 @@
     {k30, XXX, k32, k33, k34, k35, k36, k37, k38, k39, k3a, k3b, XXX, k3d, k3e, k3f}, \
     {k40, k41, k42, XXX, XXX, XXX, k46, XXX, XXX, k49, k4a, k4b, k4c, k4d, k4e, k4f}  \
 }
+
+enum K14_keycodes {
+    KEY_USB_LED = SAFE_RANGE,
+    KEY_BT_TOGGLE,
+    KEY_BT_MODE,
+    KEY_USB_MODE,
+    KEY_BT_PAIR,
+    KEY_BT_PROF1,
+    KEY_BT_PROF2,
+    KEY_BT_PROF3,
+    GM807_SAFE_RANGE,
+};

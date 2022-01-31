@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include QMK_KEYBOARD_H
+#include "../rgb/k14.h"
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
@@ -25,6 +26,12 @@ enum layer_names {
     _FN1,
     _FN2,
 };
+
+#define BT_TOG  KEY_BT_TOGGLE
+#define BT_PRO1 KEY_BT_PROF1
+#define BT_PRO2 KEY_BT_PROF2
+#define BT_PRO3 KEY_BT_PROF3
+#define BT_PAIR KEY_BT_PAIR
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -63,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:          0          1          2         3        4         5         6         7         8         9          10          11         12         13        14       15      */
     [_FN1] =  { {    KC_GRV,  KC_SLCK,  KC_PAUS,   KC_APP,  _______,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC__MUTE, KC__VOLDOWN, KC__VOLUP,  _______,  KC_SLEP, RGB_TOG },
-                {   _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,     _______,   _______,  _______,  _______, RGB_HUI },
+                {    BT_TOG,  BT_PRO1,  BT_PRO2,  BT_PRO3,  BT_PAIR,  _______,  _______,  _______,  _______,  _______,   _______,     _______,   _______,  _______,  _______, RGB_HUI },
                 {   _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,     _______,     KC_NO,  _______,  _______, RGB_SPI },
                 {   _______,    KC_NO,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,     _______,     KC_NO,  _______,  _______, RGB_SAI },
                 {   _______,  KC_LALT,  KC_LGUI,    KC_NO,    KC_NO,    KC_NO,  _______,    KC_NO,    KC_NO,  _______,   _______,     MO(_FN1),  MO(_FN2), _______,  _______, _______ }
@@ -112,6 +119,7 @@ bool dip_switch_update_user(uint8_t index, bool active){
   }
   return true;
 }
+
 void keyboard_post_init_user(void) {
   // Customise these values to desired behaviour
   debug_enable=true;
