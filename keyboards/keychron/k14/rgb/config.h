@@ -43,7 +43,7 @@
 #define LED_PIN_ON_STATE  1
 
 // Bluetooth
-#define ITON_BT5 // Uncomment on BT5.0 keyboards
+//#define ITON_BT5 // Uncomment on BT5.0 keyboards
 #define BT_MAX_PROFILES 3
 #define SN32_SPI_SLAVE_MODE
 #define SN32_SPI_TXFIFO_THRESHOLD 7

@@ -28,5 +28,5 @@ enum K14_keycodes {
     KEY_BT_PROF1,
     KEY_BT_PROF2,
     KEY_BT_PROF3,
-    GM807_SAFE_RANGE,
+    K14_SAFE_RANGE,
 };
