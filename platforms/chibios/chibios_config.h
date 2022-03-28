@@ -21,6 +21,9 @@
 
 #if defined(MCU_RP)
 #    define CPU_CLOCK RP_CORE_CLK
+
+#    define usb_lld_endpoint_fields
+
 #endif
 
 // STM32 compatibility
