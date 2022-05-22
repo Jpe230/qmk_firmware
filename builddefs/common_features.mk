@@ -550,6 +550,25 @@ ifeq ($(strip $(VIA_ENABLE)), yes)
     OPT_DEFS += -DVIA_ENABLE
 endif
 
+ifeq ($(strip $(OPENRGB_ENABLE)), yes)
+     ifeq ($(strip $(VIA_ENABLE)), yes)
+        $(error OPENRGB_ENABLE and VIA_ENABLE cannot currently be enabled simultaneously)
+    endif
+    RAW_ENABLE := yes
+    SRC += $(QUANTUM_DIR)/openrgb.c
+    OPT_DEFS += -DOPENRGB_ENABLE
+endif
+
+ifeq ($(strip $(DYNAMIC_KEYMAP_ENABLE)), yes)
+    OPT_DEFS += -DDYNAMIC_KEYMAP_ENABLE
+    SRC += $(QUANTUM_DIR)/dynamic_keymap.c
+endif
+
+ifeq ($(strip $(DIP_SWITCH_ENABLE)), yes)
+    OPT_DEFS += -DDIP_SWITCH_ENABLE
+    SRC += $(QUANTUM_DIR)/dip_switch.c
+endif
+
 VALID_MAGIC_TYPES := yes
 BOOTMAGIC_ENABLE ?= no
 ifneq ($(strip $(BOOTMAGIC_ENABLE)), no)
