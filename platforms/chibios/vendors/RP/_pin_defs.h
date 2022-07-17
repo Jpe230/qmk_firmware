@@ -35,3 +35,6 @@
 #define GP28 28U
 #define GP29 29U
 #define GP30 30U
+
+#define RP2040_PWM_CHANNEL_A 1
+#define RP2040_PWM_CHANNEL_B 2
