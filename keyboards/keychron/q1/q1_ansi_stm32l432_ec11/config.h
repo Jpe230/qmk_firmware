@@ -51,6 +51,10 @@
 /* We have 2KB EEPROM size on STM32L432 */
 #define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 2047
 
+/* EEPROM Driver Configuration */
+#define WEAR_LEVELING_LOGICAL_SIZE 2048
+#define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
+
 /* Encoder Configuration */
 #define ENCODERS_PAD_A { A10 }
 #define ENCODERS_PAD_B { A8 }
