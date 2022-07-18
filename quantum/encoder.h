@@ -26,6 +26,10 @@ bool encoder_read(void);
 bool encoder_update_kb(uint8_t index, bool clockwise);
 bool encoder_update_user(uint8_t index, bool clockwise);
 
+#if defined(PAL_USE_CALLBACKS) || defined(AVR_USE_INT)
+void encoder_insert_state(uint8_t index);
+#endif
+
 #ifdef SPLIT_KEYBOARD
 
 void encoder_state_raw(uint8_t* slave_state);
