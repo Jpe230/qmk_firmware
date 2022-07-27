@@ -54,3 +54,16 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
     return true;
 }
 #endif
+
+const uint8_t music_map[MATRIX_ROWS][MATRIX_COLS] = LAYOUT(
+           12,
+    9, 10, 11,
+    6,  7,  8,
+    3,  4,  5,
+    0,  1,  2
+);
+
+void keyboard_pre_init_user(void) {
+    setPinOutput(SPEAKER_SHUTDOWN);
+    writePinHigh(SPEAKER_SHUTDOWN);
+}
