@@ -11,14 +11,16 @@ COMMON_VPATH += $(PLATFORM_PATH) \
                 $(QUANTUM_DIR)/painter/$(LVGL_DIR_NAME) \
                 $(LVGL_PATH)
 
-include $(LVGL_PATH)/src/extra/extra.mk
-include $(LVGL_PATH)/src/core/lv_core.mk
-include $(LVGL_PATH)/src/draw/lv_draw.mk
-include $(LVGL_PATH)/src/draw/sw/lv_draw_sw.mk
-include $(LVGL_PATH)/src/font/lv_font.mk
-include $(LVGL_PATH)/src/hal/lv_hal.mk
-include $(LVGL_PATH)/src/misc/lv_misc.mk
-include $(LVGL_PATH)/src/widgets/lv_widgets.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/demos/lv_demos.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/examples/lv_examples.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/core/lv_core.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/draw/lv_draw.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/extra/lv_extra.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/font/lv_font.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/hal/lv_hal.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/misc/lv_misc.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/widgets/lv_widgets.mk
+
 
 SRC += qp_lvgl.c \
        $(CSRCS)

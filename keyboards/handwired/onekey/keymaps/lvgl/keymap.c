@@ -13,6 +13,9 @@ painter_device_t lcd;
 void lv_example_arc_2(void);
 
 void keyboard_post_init_user(void) {
+
+    dprintf("Starting up\n");
+
     lcd = qp_gc9a01_make_spi_device(240, 240, LCD_CS_PIN, LCD_DC_PIN, LCD_RST_PIN, 4, 0);
     qp_init(lcd, QP_ROTATION_0);
     qp_rect(lcd, 0, 0, 239, 319, 0, 255, 255, true);

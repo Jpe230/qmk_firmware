@@ -53,6 +53,11 @@ static uint32_t tick_task_callback(uint32_t trigger_time, void *cb_arg) {
     return state->delay_ms;
 }
 
+void my_log_cb(const char * buf)
+{
+  dprintf("%s", buf);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Quantum Painter LVGL Integration API: qp_lvgl_attach
 
@@ -117,6 +122,8 @@ bool qp_lvgl_attach(painter_device_t device) {
     disp_drv.hor_res  = driver->panel_width;  /*Set the horizontal resolution of the display*/
     disp_drv.ver_res  = driver->panel_height; /*Set the vertical resolution of the display*/
     lv_disp_drv_register(&disp_drv);          /*Finally register the driver*/
+
+    lv_log_register_print_cb(my_log_cb);
 
     return true;
 }
