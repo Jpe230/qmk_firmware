@@ -46,3 +46,7 @@ void enter_bootloader_mode_if_requested(void) {
             ;
     }
 }
+
+__attribute__((weak)) void mcu_reset(void) {
+    NVIC_SystemReset();
+}
