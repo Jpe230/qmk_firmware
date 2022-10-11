@@ -5,6 +5,31 @@
 
 #include QMK_KEYBOARD_H
 
+#ifdef VIA_ENABLE
+  #define USER_START USER00
+#else
+  #define USER_START SAFE_RANGE
+#endif
+
+enum userspace_custom_keycodes {
+    VRSN = USER_START,           // Prints QMK Firmware and board info
+    UC_FLIP,                     // (ಠ痊ಠ)┻━┻
+    UC_TABL,                     // ┬─┬ノ( º _ ºノ)
+    UC_SHRG,                     // ¯\_(ツ)_/¯
+    UC_DISA,                     // ಠ_ಠ
+    UC_IRNY,
+    UC_CLUE,
+    KC_NOMODE,
+    KC_WIDE,
+    KC_SCRIPT,
+    KC_BLOCKS,
+    KC_REGIONAL,
+    KC_AUSSIE,
+    KC_ZALGO,
+    KC_SUPER
+};
+
+
 /* ---------------------------
  * Custom OLED Fncs Prototypes
  * ---------------------------

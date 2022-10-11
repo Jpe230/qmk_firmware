@@ -2,8 +2,17 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "jpe230.h"
+#include "junicode.h"
+
+void matrix_init_user(void) {
+    matrix_init_unicode();
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_record_unicode(keycode, record)) {
+        return false;
+    }
+
     if (record->event.pressed) {
         oled_timer_reset();
         set_keylog(keycode, record);

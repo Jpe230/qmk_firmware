@@ -11,11 +11,14 @@ ifneq ($(CONVERT_TO),)
     DEBUG_MATRIX_SCAN_RATE_ENABLE = yes
     WPM_ENABLE = yes
     CONSOLE_ENABLE = yes
+    UNICODE_COMMON = yes
+    OPT_DEFS += -DCUSTOM_UNICODE_ENABLE
     SRC +=  oled/rp2040/master/oled_master_handler.c \
             oled/rp2040/master/indicators_down.c \
             oled/rp2040/master/indicators_up.c \
             oled/rp2040/slave/oled_slave_handler.c \
-            oled/rp2040/slave/ocean_dream.c
+            oled/rp2040/slave/ocean_dream.c \
+			junicode.c
 else
     # Asume AVR
     LTO_ENABLE = yes
