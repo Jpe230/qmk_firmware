@@ -44,7 +44,7 @@ static void update_fn(struct ch_virtual_timer *timer, void *arg) {
     (void)arg;
     chSysLockFromISR();
     get_system_time_ticks();
-    chVTSetI(&update_timer, UPDATE_INTERVAL, update_fn, NULL);
+    //chVTSetI(&update_timer, UPDATE_INTERVAL, update_fn, NULL);
     chSysUnlockFromISR();
 }
 #endif
