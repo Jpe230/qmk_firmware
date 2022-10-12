@@ -25,7 +25,7 @@ bool backing_store_erase(void) {
     FLASH_Status status;
     for (int i = 0; i < (WEAR_LEVELING_SN32_EMULATION_PAGE_COUNT); ++i) {
         status = FLASH_EraseSector(WEAR_LEVELING_SN32_EMULATION_BASE_PAGE_ADDRESS + (i * WEAR_LEVELING_SN32_PAGE_SIZE));
-        if (status != FLASH_FAIL) {
+        if (status == FLASH_FAIL) {
             ret = false;
         }
     }
