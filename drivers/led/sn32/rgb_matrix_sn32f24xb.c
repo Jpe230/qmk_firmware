@@ -1,5 +1,7 @@
 #include "rgb_matrix.h"
 #include "sn32f24xb.h"
+#include "debounce.h"
+
 //#include "matrix.c"
 
 #if !defined(RGB_MATRIX_HUE_STEP)
@@ -18,6 +20,8 @@
 #    define RGB_MATRIX_SPD_STEP 16
 #endif
 
+#define ROWS_PER_HAND (MATRIX_ROWS)
+#define MATRIX_IO_DELAY 100
 /*
     COLS key / led
     SS8050 transistors NPN driven low
@@ -54,7 +58,9 @@ static uint8_t chan_col_order[LED_MATRIX_COLS] = {0}; // track the channel col o
 static uint8_t current_row = 0; // LED row scan counter
 static uint8_t row_idx = 0; // key row scan counter
 extern matrix_row_t raw_matrix[MATRIX_ROWS]; //raw values
-matrix_row_t curr_matrix[MATRIX_ROWS];
+extern matrix_row_t matrix[MATRIX_ROWS]; //debounced values
+matrix_row_t current_matrix[MATRIX_ROWS] = {0}; //scan values
+bool has_changed = false; // matrix update check
 static const uint32_t periodticks = 256;
 static const uint32_t freq = (RGB_MATRIX_HUE_STEP * RGB_MATRIX_SAT_STEP * RGB_MATRIX_VAL_STEP * RGB_MATRIX_SPD_STEP * RGB_MATRIX_LED_PROCESS_LIMIT);
 static const pin_t led_row_pins[LED_MATRIX_ROWS_HW] = LED_MATRIX_ROW_PINS; // We expect a R,B,G order here
@@ -65,6 +71,11 @@ bool enable_pwm = false;
 static const uint8_t underglow_leds[UNDERGLOW_LEDS] = UNDERGLOW_IDX;
 #endif
 
+void matrix_output_unselect_delay(uint8_t line, bool key_pressed) {
+    for (int i = 0; i < MATRIX_IO_DELAY; ++i) {
+        __asm__ volatile("" ::: "memory");
+    }
+}
 /* PWM configuration structure. We use timer CT16B1 with 24 channels. */
 static PWMConfig pwmcfg = {
     freq,            /* PWM clock frequency. */
@@ -300,7 +311,7 @@ void update_pwm_channels(PWMDriver *pwmp) {
     for(uint8_t col_idx = 0; col_idx < LED_MATRIX_COLS; col_idx++, row_shifter <<= 1) {
         #if(DIODE_DIRECTION == ROW2COL)
             // Scan the key matrix column
-            matrix_read_rows_on_col(curr_matrix,col_idx,row_shifter);
+          matrix_read_rows_on_col(current_matrix,col_idx,row_shifter);
         #endif
         uint8_t led_index = g_led_config.matrix_co[row_idx][col_idx];
         // Check if we need to enable RGB output
@@ -336,14 +347,19 @@ void rgb_callback(PWMDriver *pwmp) {
     // Disable LED output before scanning the key matrix
     shared_matrix_rgb_disable_leds();
     shared_matrix_rgb_disable_pwm();
-    matrix_row_t curr_matrix[MATRIX_ROWS] = {0};
     #if(DIODE_DIRECTION == COL2ROW)
         // Scan the key matrix row
-        matrix_read_cols_on_row(curr_matrix, row_idx);
+        matrix_read_cols_on_row(current_matrix, row_idx);
     #endif
     update_pwm_channels(pwmp);
     if(enable_pwm) writePinHigh(led_row_pins[current_row]);
     chSysUnlockFromISR();
+    //scan done, update the matrix
+    bool changed = memcmp(raw_matrix, current_matrix, sizeof(current_matrix)) != 0;
+    if (changed) memcpy(raw_matrix, current_matrix, sizeof(current_matrix));
+    has_changed = changed;
+    // reset for next pass
+    memset(current_matrix, 0, sizeof *current_matrix);
     // Advance the timer to just before the wrap-around, that will start a new PWM cycle
     pwm_lld_change_counter(pwmp, 0xFFFF);
     // Enable the interrupt
@@ -388,4 +404,17 @@ void SN32F24xB_set_color_all(uint8_t r, uint8_t g, uint8_t b) {
     for (int i=0; i<RGB_MATRIX_LED_COUNT; i++) {
         SN32F24xB_set_color(i, r, g, b);
     }
+}
+bool matrix_scan_custom(matrix_row_t current_matrix[]) {
+
+//#ifdef SPLIT_KEYBOARD
+ //   changed = debounce(raw_matrix, matrix + thisHand, ROWS_PER_HAND, changed) | matrix_post_scan();
+//#else
+    bool changed = has_changed;
+    changed = debounce(raw_matrix, matrix, ROWS_PER_HAND, changed);
+    matrix_scan_quantum();
+    has_changed = false;
+//#endif
+    return (uint8_t)changed;
+
 }

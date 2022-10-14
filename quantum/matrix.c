@@ -316,9 +316,9 @@ __attribute__((weak)) bool transport_master_if_connected(matrix_row_t master_mat
     return true; // Treat the transport as always connected
 }
 #endif
+#ifndef MATRIX_NO_SCAN
 
 uint8_t matrix_scan(void) {
-#ifndef MATRIX_NO_SCAN
 // Some implementations require custom code to time the matrix scan in a very short window. Let them scan it with a custom function
     matrix_row_t curr_matrix[MATRIX_ROWS] = {0};
 
@@ -334,9 +334,6 @@ uint8_t matrix_scan(void) {
         matrix_read_rows_on_col(curr_matrix, current_col, row_shifter);
     }
 #endif
-#else
-    extern matrix_row_t curr_matrix[MATRIX_ROWS];
-#endif
     bool changed = memcmp(raw_matrix, curr_matrix, sizeof(curr_matrix)) != 0;
     if (changed) memcpy(raw_matrix, curr_matrix, sizeof(curr_matrix));
 
@@ -348,3 +345,4 @@ uint8_t matrix_scan(void) {
 #endif
     return (uint8_t)changed;
 }
+#endif
