@@ -1,5 +1,6 @@
 #include "rgb_matrix.h"
 #include "sn32f24xb.h"
+//#include "matrix.c"
 
 #if !defined(RGB_MATRIX_HUE_STEP)
 #    define RGB_MATRIX_HUE_STEP 8
@@ -53,11 +54,12 @@ static uint8_t chan_col_order[LED_MATRIX_COLS] = {0}; // track the channel col o
 static uint8_t current_row = 0; // LED row scan counter
 static uint8_t row_idx = 0; // key row scan counter
 extern matrix_row_t raw_matrix[MATRIX_ROWS]; //raw values
+matrix_row_t curr_matrix[MATRIX_ROWS];
 static const uint32_t periodticks = 256;
 static const uint32_t freq = (RGB_MATRIX_HUE_STEP * RGB_MATRIX_SAT_STEP * RGB_MATRIX_VAL_STEP * RGB_MATRIX_SPD_STEP * RGB_MATRIX_LED_PROCESS_LIMIT);
 static const pin_t led_row_pins[LED_MATRIX_ROWS_HW] = LED_MATRIX_ROW_PINS; // We expect a R,B,G order here
 static const pin_t led_col_pins[LED_MATRIX_COLS] = LED_MATRIX_COL_PINS;
-RGB led_state[DRIVER_LED_TOTAL]; // led state buffer
+RGB led_state[RGB_MATRIX_LED_COUNT]; // led state buffer
 bool enable_pwm = false;
 #ifdef UNDERGLOW_RBG // handle underglow with flipped B,G channels
 static const uint8_t underglow_leds[UNDERGLOW_LEDS] = UNDERGLOW_IDX;
@@ -383,22 +385,7 @@ void SN32F24xB_set_color(int index, uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void SN32F24xB_set_color_all(uint8_t r, uint8_t g, uint8_t b) {
-    for (int i=0; i<DRIVER_LED_TOTAL; i++) {
+    for (int i=0; i<RGB_MATRIX_LED_COUNT; i++) {
         SN32F24xB_set_color(i, r, g, b);
     }
-}
-
-bool matrix_scan_custom(matrix_row_t current_matrix[]) {
-
-    bool changed = memcmp(raw_matrix, curr_matrix, sizeof(curr_matrix)) != 0;
-    if (changed) memcpy(raw_matrix, curr_matrix, sizeof(curr_matrix));
-
-#ifdef SPLIT_KEYBOARD
-    changed = debounce(raw_matrix, matrix + thisHand, ROWS_PER_HAND, changed) | matrix_post_scan();
-#else
-    changed = debounce(raw_matrix, matrix, ROWS_PER_HAND, changed);
-    matrix_scan_quantum();
-#endif
-    return (uint8_t)changed;
-
 }
