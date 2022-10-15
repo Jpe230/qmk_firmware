@@ -19,7 +19,10 @@
 #endif
 
 #define ROWS_PER_HAND (MATRIX_ROWS)
-#define MATRIX_IO_DELAY 100
+
+#ifndef MATRIX_IO_DELAY
+#    define MATRIX_IO_DELAY 30
+#endif
 /*
     COLS key / led
     SS8050 transistors NPN driven low
@@ -70,7 +73,7 @@ static const uint8_t underglow_leds[UNDERGLOW_LEDS] = UNDERGLOW_IDX;
 #endif
 
 void matrix_output_unselect_delay(uint8_t line, bool key_pressed) {
-    for (int i = 0; i < MATRIX_IO_DELAY; ++i) {
+    for (int i = 0; i < TIME_US2I(MATRIX_IO_DELAY); ++i) {
         __asm__ volatile("" ::: "memory");
     }
 }
