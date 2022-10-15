@@ -2,8 +2,6 @@
 #include "sn32f24xb.h"
 #include "debounce.h"
 
-//#include "matrix.c"
-
 #if !defined(RGB_MATRIX_HUE_STEP)
 #    define RGB_MATRIX_HUE_STEP 8
 #endif
@@ -358,8 +356,6 @@ void rgb_callback(PWMDriver *pwmp) {
     bool changed = memcmp(raw_matrix, current_matrix, sizeof(current_matrix)) != 0;
     if (changed) memcpy(raw_matrix, current_matrix, sizeof(current_matrix));
     has_changed = changed;
-    // reset for next pass
-    memset(current_matrix, 0, sizeof *current_matrix);
     // Advance the timer to just before the wrap-around, that will start a new PWM cycle
     pwm_lld_change_counter(pwmp, 0xFFFF);
     // Enable the interrupt
@@ -413,7 +409,6 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
     bool changed = has_changed;
     changed = debounce(raw_matrix, matrix, ROWS_PER_HAND, changed);
     matrix_scan_quantum();
-    has_changed = false;
 //#endif
     return (uint8_t)changed;
 
