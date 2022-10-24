@@ -452,6 +452,8 @@ static inline void generate_tick_event(void) {
  * @return false Matrix didn't change
  */
 static bool matrix_task(void) {
+    extern bool matrix_locked;
+    if(!matrix_locked){
     static matrix_row_t matrix_previous[MATRIX_ROWS];
 
     matrix_scan();
@@ -500,6 +502,7 @@ static bool matrix_task(void) {
     }
 
     return matrix_changed;
+} else return false;
 }
 
 /** \brief Tasks previously located in matrix_scan_quantum
