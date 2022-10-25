@@ -20,7 +20,7 @@ DIP_SWITCH_ENABLE = yes
 # Custom RGB matrix handling
  RGB_MATRIX_ENABLE = yes
  RGB_MATRIX_DRIVER = SN32F24xB
-
+DEBOUNCE_TYPE = sym_eager_pr
 # # project specific files
 CUSTOM_MATRIX = shared
 # Build ansi by default
