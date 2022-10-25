@@ -63,9 +63,8 @@ static uint8_t row_idx = 0; // key row scan counter
 #ifdef MATRIX_NO_SCAN
 extern matrix_row_t raw_matrix[MATRIX_ROWS]; //raw values
 extern matrix_row_t matrix[MATRIX_ROWS]; //debounced values
-static matrix_row_t current_matrix[MATRIX_ROWS] = {0}; //scan values
-static bool has_changed = false; // matrix update check
-bool matrix_locked = false;
+matrix_row_t current_matrix[MATRIX_ROWS] = {0}; //scan values
+bool has_changed = false; // matrix update check
 #endif
 static const uint32_t periodticks = 256;
 static const uint32_t freq = (RGB_MATRIX_HUE_STEP * RGB_MATRIX_SAT_STEP * RGB_MATRIX_VAL_STEP * RGB_MATRIX_SPD_STEP * RGB_MATRIX_LED_PROCESS_LIMIT);
@@ -358,20 +357,18 @@ void rgb_callback(PWMDriver *pwmp) {
     #ifdef MATRIX_NO_SCAN
     #   if(DIODE_DIRECTION == COL2ROW)
         // Scan the key matrix row
-        matrix_locked = true;
         matrix_read_cols_on_row(current_matrix, row_idx);
     #   endif
     #endif
     update_pwm_channels(pwmp);
     if(enable_pwm) writePinHigh(led_row_pins[current_row]);
+    chSysUnlockFromISR();
     #ifdef MATRIX_NO_SCAN
     //scan done, update the matrix
     bool changed = memcmp(raw_matrix, current_matrix, sizeof(current_matrix)) != 0;
     if (changed) memcpy(raw_matrix, current_matrix, sizeof(current_matrix));
     has_changed = changed;
-    matrix_locked = false;
     #endif
-    chSysUnlockFromISR();
     // Advance the timer to just before the wrap-around, that will start a new PWM cycle
     pwm_lld_change_counter(pwmp, 0xFFFF);
     // Enable the interrupt
