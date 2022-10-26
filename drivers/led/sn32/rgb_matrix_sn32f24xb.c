@@ -318,7 +318,7 @@ void update_pwm_channels(PWMDriver *pwmp) {
     for(uint8_t col_idx = 0; col_idx < LED_MATRIX_COLS; col_idx++, row_shifter <<= 1) {
         #if(DIODE_DIRECTION == ROW2COL)
             // Scan the key matrix column
-          matrix_read_rows_on_col(pass_matrix,col_idx,row_shifter);
+          matrix_read_rows_on_col(shared_matrix,col_idx,row_shifter);
         #endif
         uint8_t led_index = g_led_config.matrix_co[row_idx][col_idx];
         // Check if we need to enable RGB output
@@ -358,18 +358,20 @@ void rgb_callback(PWMDriver *pwmp) {
     #ifdef MATRIX_NO_SCAN
     #   if(DIODE_DIRECTION == COL2ROW)
         // Scan the key matrix row
-    matrix_row_t pass_matrix[MATRIX_ROWS] = {0}; //scan values
+    //matrix_row_t pass_matrix[MATRIX_ROWS] = {0}; //scan values
     if(!matrix_locked &&last_row_idx != row_idx){
-                matrix_read_cols_on_row(pass_matrix, row_idx);}
+                matrix_read_cols_on_row(shared_matrix, row_idx);}
     #   endif
     #endif
     update_pwm_channels(pwmp);
     if(enable_pwm) writePinHigh(led_row_pins[current_row]);
     #ifdef MATRIX_NO_SCAN
     //scan done, update the matrix
-    bool changed = memcmp(shared_matrix, pass_matrix, sizeof(pass_matrix)) != 0;
-    if (changed) memcpy(shared_matrix, pass_matrix, sizeof(pass_matrix));
+    //    if(!matrix_locked &&last_row_idx != row_idx){
+// bool changed = memcmp(shared_matrix, pass_matrix, sizeof(pass_matrix)) != 0;
+  //  if (changed) memcpy(shared_matrix, pass_matrix, sizeof(pass_matrix));
     //matrix_locked = false;
+    //}
     #endif
     chSysUnlockFromISR();
     // Advance the timer to just before the wrap-around, that will start a new PWM cycle
@@ -425,6 +427,7 @@ void SN32F24xB_set_color_all(uint8_t r, uint8_t g, uint8_t b) {
 bool matrix_scan_custom(matrix_row_t current_matrix[]) {
     chSysLock();
     matrix_locked = true;
+    wait_us(MATRIX_IO_DELAY);
     bool changed = memcmp(raw_matrix, shared_matrix, sizeof(shared_matrix)) != 0;
     if (changed) memcpy(raw_matrix, shared_matrix, sizeof(shared_matrix));
     //raw_matrix = shared_matrix;
