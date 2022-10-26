@@ -346,8 +346,12 @@ void rgb_callback(PWMDriver *pwmp) {
     // Disable the interrupt
     pwmDisablePeriodicNotification(pwmp);
     // Advance to the next LED RGB channels
-
-    current_row = (current_row + 1) % LED_MATRIX_ROWS_HW;
+    current_row++;
+    if(current_row >= LED_MATRIX_ROWS_HW) current_row = 0;
+    uint8_t last_row_idx = row_idx;
+    // Advance to the next key matrix row
+    if(current_row % LED_MATRIX_ROW_CHANNELS == 2) row_idx++;
+    if(row_idx >= LED_MATRIX_ROWS) row_idx = 0;
 
     chSysLockFromISR();
     // Disable LED output before scanning the key matrix
@@ -357,10 +361,8 @@ void rgb_callback(PWMDriver *pwmp) {
     #ifdef MATRIX_NO_SCAN
     #   if(DIODE_DIRECTION == COL2ROW)
         // Scan the key matrix row
-        uint8_t key_row = current_row / 3;
-
         if(!matrix_scanned && !matrix_locked) {
-            matrix_read_cols_on_row(shared_matrix, key_row);
+            matrix_read_cols_on_row(shared_matrix, row_idx);
         }
 
         if(!current_row) { // Assume we have finished scanning the matrix
