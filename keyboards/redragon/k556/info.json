@@ -1,0 +1,11 @@
+{
+    "keyboard_name": "K556 Devarajas",
+    "manufacturer": "Redragon",
+    "url": "https://github.com/SonixQMK",
+    "maintainer": "test",
+    "usb": {
+        "vid": "0x0C45",
+        "pid": "0x5004",
+        "device_version": "1.0.2"
+    }
+}
